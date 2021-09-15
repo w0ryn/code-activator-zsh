@@ -9,14 +9,20 @@ _CA__ACTIVATE() {
 	_CA__RESTORE_ENVIRONMENT
 
 	local PROJECT="$1"
-	[ ! $PROJECT ] && { cd; return 0; }
+	[ ! $PROJECT ] && {
+		[ ! $_CA__IN_ZSH_PLUGIN ] && cd
+		return 0
+		}
 
 	local PROJECT_PATH=$(_CA__GET_FULL_PATH $PROJECT)
-	[ ! -d $PROJECT_PATH ] && { cd; return 0; }
+	[ ! -d $PROJECT_PATH ] && return 1
+
+	local SOURCE_PATH="$PROJECT_PATH/$_CA__SOURCE_DIR_NAME"
+	[ ! -d $SOURCE_PATH ] && return 1
 
 	_CA__ACTIVATE_VIRTUAL_ENV $PROJECT_PATH
 	_CA__ACTIVATE_CUSTOM_ENV  $PROJECT_PATH
-	_CA__ACTIVATE_SOURCE_DIR  $PROJECT_PATH
+	_CA__ACTIVATE_SOURCE_PATH $SOURCE_PATH
 
 	_CA__TMUX_WINDOW_RENAME $PROJECT
 }
@@ -32,7 +38,7 @@ _CA__ACTIVATE_VIRTUAL_ENV() {
 		[ -f $NO_ENV ] && {
 			echo 'no virtual environment here, boss!'
 		} || { 
-			_CA__INTERACTIVE_ENV_SETUP $PROJECT_PATH
+			_CA__INTERACTIVE_ENV_SETUP $PROJECT_PATH && source $ACTIVATE
 		}
 	}
 }
@@ -41,14 +47,12 @@ _CA__ACTIVATE_CUSTOM_ENV() {
 	local PROJECT_PATH="$1"
 	local CUSTOM_ENV="$PROJECT_PATH/$_CA__CUSTOM_ENV_NAME"
 
-	[ ! -f $CUSTOM_ENV ] || {
-		source $CUSTOM_ENV && echo 'custom environment active'
-	}
+	[ -f $CUSTOM_ENV ] && source $CUSTOM_ENV
 }
 
-_CA__ACTIVATE_SOURCE_DIR() {
-	local SOURCE_DIR="$1/$_CA__SOURCE_DIR_NAME"
-	cd $SOURCE_DIR
+_CA__ACTIVATE_SOURCE_PATH() {
+	local SOURCE_PATH="$1"
+	cd $SOURCE_PATH
 }
 
 #####################################################################

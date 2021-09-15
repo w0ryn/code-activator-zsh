@@ -5,8 +5,6 @@
 #                                                                   #
 #####################################################################
 
-#####################################################################
-
 DEPENDENCIES=(
 	fzf
 	)
@@ -14,8 +12,8 @@ DEPENDENCIES=(
 IMPORTS=(
 	"${0:a:h}/zsh/settings.zsh"
 	"${0:a:h}/zsh/helpers.zsh"
-	"${0:a:h}/zsh/activate.zsh"
 	"${0:a:h}/zsh/clone.zsh"
+	"${0:a:h}/zsh/activate.zsh"
 	)
 
 #####################################################################
@@ -46,9 +44,13 @@ CODE_ACTIVATOR() {
 	local ERROR=0
 
 	case $1 in
-		clone ) _CA__CLONE ${@:2}    || ERROR=1 ;;
-		    * ) _CA__ACTIVATE ${@:2} || ERROR=2 ;;
+	    deactivate ) _CA__RESTORE_ENVIRONMENT && cd || ERROR=1 ;;
+		clone ) _CA__CLONE ${@:2} || ERROR=1 ;;
+		  new ) IS_NEW_PROJECT=1 _CA__CLONE ${@:2} || ERROR=1 ;;
+		    * ) _CA__ACTIVATE ${@:1} || ERROR=42 ;;
 	esac
+
+	[[ $ERROR -ne 0 ]] && _CA__ERROR_CLEANUP $ERROR
 
 	return $ERROR
 }
@@ -63,12 +65,7 @@ _CODE_ACTIVATOR() {
 
 	case $state in
 		project )
-			compadd clone
-
-			for dir in $CODE_ACTIVATOR__DIRS
-			do
-				compadd "$(basename $dir)/$(basename $(ls -d -- $dir/*))"
-			done
+			compadd $(_CA__GET_COMMANDS_AND_PROJECTS | sed 's/deactivate//')
 			;;
 		arguments )
 			case $words[2] in
@@ -78,3 +75,54 @@ _CODE_ACTIVATOR() {
 	esac
 }
 compdef _CODE_ACTIVATOR CODE_ACTIVATOR
+
+#####################################################################
+
+_CA__GET_COMMANDS_AND_PROJECTS() {
+	local COMMANDS=(deactivate clone new)
+	local PROJECTS=()
+
+	for base_dir in $CODE_ACTIVATOR__DIRS
+	do
+		for project_dir in $(ls -d -- $base_dir/*)
+		do
+			PROJECTS+=("$(basename $base_dir)/$(basename $project_dir)")
+		done
+	done
+
+	echo $COMMANDS $PROJECTS
+}
+
+_CA__ERROR_CLEANUP() {
+	local ERROR="$1"
+	case $ERROR in 
+		42 )
+			echo 'failed to activate environment; aborting' >&2
+			;;
+	esac
+}
+
+#####################################################################
+
+[[ $CODE_ACTIVATOR__DISABLE_SHORTCUT -eq 0 ]] && {
+	_CA__ZSH_SHORTCUT_PLUGIN() {
+		local OPTIONS=$(_CA__GET_COMMANDS_AND_PROJECTS | sed 's/\s\+/\n/g')
+
+		local ARGUMENT=$(\
+			_CA__GET_COMMANDS_AND_PROJECTS \
+				| sed 's/\s\+/\n/g' \
+				| $_CA__FZF --prompt 'select a project: ' \
+		)
+
+		_CA__IN_ZSH_PLUGIN=1 CODE_ACTIVATOR $ARGUMENT
+
+		echo
+		zle reset-prompt
+	}
+	zle -N codeactivator _CA__ZSH_SHORTCUT_PLUGIN
+	bindkey $CODE_ACTIVATOR__SHORTCUT codeactivator
+}
+
+[[ $CODE_ACTIVATOR__DISABLE_ALIAS -eq 0 ]] && {
+	alias $CODE_ACTIVATOR__ALIAS='CODE_ACTIVATOR'
+}

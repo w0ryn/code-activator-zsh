@@ -2,6 +2,7 @@
 
 [ ! $_CA__SETTINGS_LOADED ] && source "${0:a:h}/settings.zsh"
 [ ! $_CA__HELPERS_LOADED  ] && source "${0:a:h}/helpers.zsh"
+[ ! $_CA__ACTIVATE_LOADED  ] && source "${0:a:h}/activate.zsh"
 
 #####################################################################
 
@@ -29,9 +30,10 @@ _CA__CLONE() {
 	}
 	
 	mkdir $PROJECT_PATH
-	_CA__CLONE_SOURCE $REMOTE_TARGET $PROJECT_PATH
-	_CA__INTERACTIVE_ENV_SETUP $PROJECT_PATH
+	[ ! $IS_NEW_PROJECT ] && _CA__CLONE_SOURCE $REMOTE_TARGET $PROJECT_PATH
 	_CA__INIT_CUSTOM_ENV $PROJECT_PATH
+
+	_CA__ACTIVATE "$(basename $BASE_DIR)/$PROJECT_NAME"
 }
 
 
@@ -69,7 +71,7 @@ _CA__CLONE_SOURCE() {
 		echo "failed to clone '$REMOTE_TARGET'"
 
 		printf "is this a new project? [y/N]"
-		read -k yn
+		_CA__READ_K yn
 		[[ $yn =~ ^[yY] ]] && {
 			printf 'initializing project...'
 			{
@@ -84,6 +86,7 @@ _CA__CLONE_SOURCE() {
 					;
 			} >/dev/null >&1 && echo ' success :)' || echo ' failed :c'
 		} || { 
+			rm -rf -- $PROJECT_PATH
 			echo 'exiting'
 			return 1
 		}
