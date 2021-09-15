@@ -45,6 +45,7 @@ CODE_ACTIVATOR() {
 
 	case $1 in
 	    deactivate ) _CA__RESTORE_ENVIRONMENT && cd || ERROR=1 ;;
+
 		clone ) _CA__CLONE ${@:2} || ERROR=1 ;;
 		  new ) IS_NEW_PROJECT=1 _CA__CLONE ${@:2} || ERROR=1 ;;
 		    * ) _CA__ACTIVATE ${@:1} || ERROR=42 ;;
@@ -107,9 +108,10 @@ _CA__ERROR_CLEANUP() {
 [[ $CODE_ACTIVATOR__DISABLE_SHORTCUT -eq 0 ]] && {
 	_CA__ZSH_SHORTCUT_PLUGIN() {
 		local OPTIONS=$(_CA__GET_COMMANDS_AND_PROJECTS | sed 's/\s\+/\n/g')
+		[ ! $__CUSTOM_ENV_ACTIVE ] && OPTIONS=$(echo $OPTIONS | grep -v 'deactivate')
 
 		local ARGUMENT=$(\
-			_CA__GET_COMMANDS_AND_PROJECTS \
+			echo $OPTIONS \
 				| sed 's/\s\+/\n/g' \
 				| $_CA__FZF --prompt 'select a project: ' \
 		)

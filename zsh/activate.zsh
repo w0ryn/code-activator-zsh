@@ -35,9 +35,7 @@ _CA__ACTIVATE_VIRTUAL_ENV() {
 	[ -f $ACTIVATE ] && {
 		source $ACTIVATE 
 	} || {
-		[ -f $NO_ENV ] && {
-			echo 'no virtual environment here, boss!'
-		} || { 
+		[ ! -f $NO_ENV ] && {
 			_CA__INTERACTIVE_ENV_SETUP $PROJECT_PATH && source $ACTIVATE
 		}
 	}
@@ -47,7 +45,8 @@ _CA__ACTIVATE_CUSTOM_ENV() {
 	local PROJECT_PATH="$1"
 	local CUSTOM_ENV="$PROJECT_PATH/$_CA__CUSTOM_ENV_NAME"
 
-	[ -f $CUSTOM_ENV ] && source $CUSTOM_ENV
+	[ ! -f $CUSTOM_ENV ] && _CA__INIT_CUSTOM_ENV $PROJECT_PATH
+	source $CUSTOM_ENV
 }
 
 _CA__ACTIVATE_SOURCE_PATH() {

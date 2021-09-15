@@ -20,7 +20,11 @@ _CA__GET_FULL_PATH() {
 	local PROJECT_ROOT_SHORT=$(dirname $PROJECT)
 	local PROJECT_NAME=$(basename $PROJECT)
 
-	local FULL_BASE_DIR=$(echo $CODE_ACTIVATOR__DIRS | grep "^.*/$PROJECT_ROOT_SHORT$")
+	local FULL_BASE_DIR=$(\
+		echo $CODE_ACTIVATOR__DIRS \
+			| sed 's/\s\+/\n/' \
+			| grep "^.*/$PROJECT_ROOT_SHORT$" \
+		)
 
 	echo "$FULL_BASE_DIR/$PROJECT_NAME"
 }

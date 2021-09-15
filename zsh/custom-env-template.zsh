@@ -5,10 +5,10 @@ export RESTORE_PATH="$PATH"
 
 # Store a list of project-specific environment variables; unset on env exit
 export RESTORE_ENV=(
-	CUSTOM_ENV_VAR
+	__CUSTOM_ENV_ACTIVE
 	)
 
 #####################################################################
 
 # example env var
-export CUSTOM_ENV_VAR=69
+export __CUSTOM_ENV_ACTIVE=69
