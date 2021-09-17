@@ -44,7 +44,7 @@ _CA__SELECT_BASE_DIR() {
 		BASE_NAMES=($BASE_NAMES $(basename $dir))
 	done
 
-	echo $CODE_ACTIVATOR__DIRS \
+	echo $CODE_ACTIVATOR__DIRS | sed 's/\s\+/\n/g' \
 		| grep $(\
 			echo $BASE_NAMES \
 				| sed 's/\s\+/\n/g' \
