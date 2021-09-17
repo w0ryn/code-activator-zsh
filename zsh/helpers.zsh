@@ -136,16 +136,18 @@ _CA__INIT_NODE_ENV() {
 	local ENV_PATH="$1"
 	local ENV_VERSION="$2"
 
-	"setting up node env ($ENV_VERSION)"
+	echo "setting up node env ($ENV_VERSION)"
 	nodeenv --node=$ENV_VERSION $ENV_PATH
+	echo "done"
 }
 
 _CA__INIT_VIRTUALENV() {
 	local ENV_PATH="$1"
 	local ENV_VERSION="$2"
 
-	"setting up virtualenv ($ENV_VERSION)"
+	echo "setting up virtualenv ($ENV_VERSION)"
 	virtualenv --python=$ENV_VERSION $ENV_PATH
+	echo "done"
 }
 
 _CA__INIT_CUSTOM_ENV() {
