@@ -22,7 +22,7 @@ _CA__GET_FULL_PATH() {
 
 	local FULL_BASE_DIR=$(\
 		echo $CODE_ACTIVATOR__DIRS \
-			| sed 's/\s\+/\n/' \
+			| sed 's/\s\+/\n/g' \
 			| grep "^.*/$PROJECT_ROOT_SHORT$" \
 		)
 
