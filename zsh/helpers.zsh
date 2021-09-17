@@ -45,7 +45,10 @@ _CA__SELECT_BASE_DIR() {
 	done
 
 	echo $CODE_ACTIVATOR__DIRS \
-		| grep $(echo $BASE_NAMES | $_CA__FZF --prompt 'select base directory : ')
+		| grep $(\
+			echo $BASE_NAMES \
+				| sed 's/\s\+/\n/g' \
+				| $_CA__FZF --prompt 'select base directory : ')
 }
 
 _CA__GET_REMOTE_TARGET() {
