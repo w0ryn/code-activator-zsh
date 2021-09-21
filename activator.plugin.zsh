@@ -96,6 +96,7 @@ _CA__GET_COMMANDS_AND_PROJECTS() {
 
 _CA__ERROR_CLEANUP() {
 	local ERROR="$1"
+	[ $_CA__SUPPRESS_ERROR ] && return
 	case $ERROR in 
 		42 )
 			echo 'failed to activate environment; aborting' >&2
