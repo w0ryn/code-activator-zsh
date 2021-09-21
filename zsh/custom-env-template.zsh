@@ -10,5 +10,4 @@ export _CA__RESTORE_ENV=(
 
 #####################################################################
 
-# example env var
 export __CUSTOM_ENV_ACTIVE=69
