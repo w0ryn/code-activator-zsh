@@ -18,11 +18,13 @@ _CA__ACTIVATE() {
 	[ ! -d $PROJECT_PATH ] && return 1
 
 	local SOURCE_PATH="$PROJECT_PATH/$_CA__SOURCE_DIR_NAME"
-	[ ! -d $SOURCE_PATH ] && return 1
-
-	_CA__ACTIVATE_VIRTUAL_ENV $PROJECT_PATH
-	_CA__ACTIVATE_CUSTOM_ENV  $PROJECT_PATH
-	_CA__ACTIVATE_SOURCE_PATH $SOURCE_PATH
+	[ -d $SOURCE_PATH ] && {
+		_CA__ACTIVATE_VIRTUAL_ENV $PROJECT_PATH
+		_CA__ACTIVATE_CUSTOM_ENV  $PROJECT_PATH
+		cd $SOURCE_PATH
+	} || {
+		cd $PROJECT_PATH
+	}
 
 	_CA__TMUX_WINDOW_RENAME $PROJECT
 	return 0
@@ -48,11 +50,6 @@ _CA__ACTIVATE_CUSTOM_ENV() {
 
 	[ ! -f $CUSTOM_ENV ] && _CA__INIT_CUSTOM_ENV $PROJECT_PATH
 	source $CUSTOM_ENV
-}
-
-_CA__ACTIVATE_SOURCE_PATH() {
-	local SOURCE_PATH="$1"
-	cd $SOURCE_PATH
 }
 
 #####################################################################
