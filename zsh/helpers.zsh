@@ -11,6 +11,8 @@ _CA__RESTORE_ENVIRONMENT() {
 	[ $_CA__RESTORE_PATH ] && export PATH="$_CA__RESTORE_PATH"
 	[ $_CA__RESTORE_ENV  ] && for var in $_CA__RESTORE_ENV; do unset $var; done
 
+	_CA__TMUX_RESTORE_WINDOW_NAME
+
 	unset _CA__RESTORE_PATH _CA__RESTORE_ENV
 }
 
@@ -34,6 +36,11 @@ _CA__TMUX_WINDOW_RENAME() {
 
 	[[ $TERM =~ ^tmux- ]] \
 		&& tmux rename-window "$(dirname $PROJECT):$(basename $PROJECT)"
+}
+
+_CA__TMUX_RESTORE_WINDOW_NAME() {
+	[[ $TERM =~ ^tmux- ]] \
+		&& tmux set automatic-rename on
 }
 
 _CA__SELECT_BASE_DIR() {
