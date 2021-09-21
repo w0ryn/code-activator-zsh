@@ -107,12 +107,12 @@ _CA__ERROR_CLEANUP() {
 
 [[ $CODE_ACTIVATOR__DISABLE_SHORTCUT -eq 0 ]] && {
 	_CA__ZSH_SHORTCUT_PLUGIN() {
-		local OPTIONS=$(_CA__GET_COMMANDS_AND_PROJECTS | sed 's/\s\+/\n/g')
+		local OPTIONS=$(_CA__GET_COMMANDS_AND_PROJECTS | _CA__SED_MULTILINE)
 		[ ! $__CUSTOM_ENV_ACTIVE ] && OPTIONS=$(echo $OPTIONS | grep -v 'deactivate')
 
 		local ARGUMENT=$(\
 			echo $OPTIONS \
-				| sed 's/\s\+/\n/g' \
+				| _CA__SED_MULTILINE \
 				| $_CA__FZF --prompt 'select a project: ' \
 		)
 

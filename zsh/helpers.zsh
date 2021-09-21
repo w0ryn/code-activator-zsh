@@ -22,7 +22,7 @@ _CA__GET_FULL_PATH() {
 
 	local FULL_BASE_DIR=$(\
 		echo $CODE_ACTIVATOR__DIRS \
-			| sed 's/\s\+/\n/g' \
+			| _CA__SED_MULTILINE \
 			| grep "^.*/$PROJECT_ROOT_SHORT$" \
 		)
 
@@ -44,17 +44,17 @@ _CA__SELECT_BASE_DIR() {
 		BASE_NAMES=($BASE_NAMES $(basename $dir))
 	done
 
-	echo $CODE_ACTIVATOR__DIRS | sed 's/\s\+/\n/g' \
+	echo $CODE_ACTIVATOR__DIRS | _CA__SED_MULTILINE \
 		| grep $(\
 			echo $BASE_NAMES \
-				| sed 's/\s\+/\n/g' \
+				| _CA__SED_MULTILINE \
 				| $_CA__FZF --prompt 'select base directory : ')
 }
 
 _CA__GET_REMOTE_TARGET() {
 	local REMOTE_TARGET=$(\
 		echo $CODE_ACTIVATOR__KNOWN_TARGETS \
-		| sed 's/\s\+/\n/g' \
+		| _CA__SED_MULTILINE \
 		| $_CA__FZF --print-query --prompt 'set a remote target : ' \
 		| tail -1 \
 	)
@@ -107,7 +107,7 @@ _CA__SELECT_VIRTUAL_ENV() {
 
 		VERSION=$(\
 			nodeenv --list 2>&1 \
-				| sed 's/\s\+/\n/g' \
+				| _CA__SED_MULTILINE \
 				| $_CA__FZF --prompt 'select a node version : '\
 		)
 
@@ -158,6 +158,8 @@ _CA__INIT_CUSTOM_ENV() {
 
 	cp $CUSTOM_ENV_TEMPLATE $CUSTOM_ENV
 }
+
+_CA__SED_MULTILINE() { sed 's/\s\+/\n/g'; }
 
 #####################################################################
 
