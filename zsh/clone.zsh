@@ -30,7 +30,7 @@ _CA__CLONE() {
 	}
 	
 	mkdir $PROJECT_PATH
-	[ ! $IS_NEW_PROJECT ] && _CA__CLONE_SOURCE $REMOTE_TARGET $PROJECT_PATH
+	_CA__CLONE_SOURCE $REMOTE_TARGET $PROJECT_PATH $IS_NEW_PROJECT
 	_CA__INIT_CUSTOM_ENV $PROJECT_PATH
 
 	_CA__ACTIVATE "$(basename $BASE_DIR)/$PROJECT_NAME"
@@ -64,15 +64,20 @@ __CA__CLONE() {
 _CA__CLONE_SOURCE() {
 	local REMOTE_TARGET="$1"
 	local PROJECT_PATH="$2"
+	local IS_NEW_PROJECT="$3"
 	local SOURCE_DIR="$PROJECT_PATH/$_CA__SOURCE_DIR_NAME"
 
 	echo "trying to clone '$REMOTE_TARGET' to '$PROJECT_PATH'"
 	git clone "$REMOTE_TARGET" "$SOURCE_DIR" >/dev/null 2>&1 || {
 		echo "failed to clone '$REMOTE_TARGET'"
 
-		printf "is this a new project? [y/N]"
-		_CA__READ_K yn
-		[[ $yn =~ ^[yY] ]] && {
+		[ ! $IS_NEW_PROJECT ] && {
+			printf "is this a new project? [y/N]"
+			_CA__READ_K yn
+			[[ $yn =~ ^[yY] ]] && IS_NEW_PROJECT=1
+		}
+
+		[ $IS_NEW_PROJECT ] && {
 			printf 'initializing project...'
 			{
 				mkdir $SOURCE_DIR \
