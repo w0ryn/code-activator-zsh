@@ -9,7 +9,8 @@ _CA__RESTORE_ENVIRONMENT() {
 	deactivate_node >/dev/null 2>&1
 
 	[ $_CA__RESTORE_PATH ] && export PATH="$_CA__RESTORE_PATH"
-	[ $_CA__RESTORE_ENV  ] && for var in $_CA__RESTORE_ENV; do unset $var; done
+	[[ ${#_CA__RESTORE_ENV[@]} -gt 0 ]] \
+		&& for var in $_CA__RESTORE_ENV; do unset $var; done
 
 	_CA__TMUX_RESTORE_WINDOW_NAME
 
