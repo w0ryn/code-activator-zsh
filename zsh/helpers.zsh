@@ -71,9 +71,8 @@ _CA__GET_REMOTE_TARGET() {
 
 	echo $CODE_ACTIVATOR__KNOWN_TARGETS | grep -q "$REMOTE_TARGET" && {
 		REMOTE_TARGET="$REMOTE_TARGET$(echo | $_CA__FZF --print-query --prompt "$REMOTE_TARGET" | tail -1)"
+		[[ $REMOTE_TARGET == $FIRST_SELECTION ]] && return ''
 	}
-	
-	[[ $REMOTE_TARGET == $FIRST_SELECTION ]] && return ''
 
 	echo $REMOTE_TARGET | grep -q '\.git$' || REMOTE_TARGET="$REMOTE_TARGET.git"
 	echo $REMOTE_TARGET
