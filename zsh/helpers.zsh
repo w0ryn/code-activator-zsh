@@ -78,6 +78,12 @@ _CA__GET_REMOTE_TARGET() {
 	echo $REMOTE_TARGET
 }
 
+_CA__GET_GIT_MAIN_BRANCH() {
+	{ git config --list | grep 'init.defaultbranch' | sed 's/.*=//' \
+		|| echo 'main'
+	} 2>/dev/null
+}
+
 _CA__GET_PROJECT_NAME() {
 	local REMOTE_TARGET="$1"
 	local DEFAULT_NAME=$(basename $REMOTE_TARGET | sed 's/\.git$//')

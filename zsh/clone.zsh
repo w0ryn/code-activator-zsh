@@ -86,7 +86,7 @@ _CA__CLONE_SOURCE() {
 					&& touch .gitignore \
 					&& git add .gitignore \
 					&& git commit -m 'project init' \
-					&& git remote add "$_CA__GIT_MAIN_BRANCH" $REMOTE_TARGET \
+					&& git remote add $_CA__GET_GIT_MAIN_BRANCH $REMOTE_TARGET \
 					&& cd .. \
 					;
 			} >/dev/null >&1 && echo ' success :)' || echo ' failed :c'
