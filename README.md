@@ -14,6 +14,9 @@ Use the plugin one of three ways:
 1. Use the alias (`lkj` by default)
 1. Call `CODE_ACTIVATOR` directly (meant for use as an API)
 
+## Contributing
+See our [contributing guide](./docs/CONTRIBUTING.md) and [code of conduct](./docs/CODE_OF_CONDUCT.md).
+
 ## Installation
 1. install [junegunn/fzf](https://github.com/junegunn/fzf)
 1. clone this repo, and source the `*.plugin.zsh` in your `zshrc`:
