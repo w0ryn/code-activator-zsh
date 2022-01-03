@@ -1,65 +1,44 @@
 # Code Activator
 ##### *A `zsh` utility for terminal-based project navigation*
 [![Generic badge](https://img.shields.io/badge/junegunn-fzf-blueviolet.svg)](https://github.com/junegunn/fzf)
+[![Generic badge](https://img.shields.io/badge/stedolan-jq-blueviolet.svg)](https://github.com/jq/)
 
-The `CODE_ACTIVATOR` function facilitates terminal-based project navigation by providing an interactive, fuzzy-search CLI.
-
-Generally, the CLI will activate a project's virtual environment then step into the project root.
-Once inside a project, the CLI gives the option to deactivate and return to the user's home directory.
-
-Projects can also be quickly cloned or created from scratch by using the `clone` and `new` operations respectively.
-
-Use the plugin one of three ways:
-1. Use the shortcut combination (`CTRL+SPACE` by default)
-1. Use the alias (`lkj` by default)
-1. Call `CODE_ACTIVATOR` directly (meant for use as an API)
+Code Activator provides fast project navigation in the terminal through both an API and CLI.
 
 ## Contributing
 See our [contributing guide](./docs/CONTRIBUTING.md) and [code of conduct](./docs/CODE_OF_CONDUCT.md).
 
 ## Installation
-1. install [junegunn/fzf](https://github.com/junegunn/fzf)
-1. clone this repo, and source the `*.plugin.zsh` in your `zshrc`:
+1. install dependencies [junegunn/fzf](https://github.com/junegunn/fzf) and [stedolan/jq](https://github.com/stedolan/jq)
+1. clone this repo, and source the `activator.plugin.zsh` in your `zshrc`:
 ```shell
 # replace <path-to>/code-activator with the appropriate path
 git clone https://github.com/w0ryn/code-activator-zsh.git <path-to>/code-activator
 echo 'source <path-to>/code-activator' >> $HOME/.zshrc
 ```
 
-## Configuration
-All configuration options are determined by their respective environment variables.
+By default, Code Activator looks for projects in `~/Projects/GitHub` and `~/Projects/BitBucket`, but you can configure\* this in your `~/.config/code-activator-zsh/settings.zsh`.
+It is highly recommended that, if nothing else, you configure `CA__DIRS` to group your projects as you please.
 
-### Basic Configuration
-Environment Variable               | Default                         | Description
----------------------------------- | ------------------------------- | -----------
-`CODE_ACTIVATOR__SHORTCUT`         | `^@` (a.k.a. CTRL+SPACE)        | shortcut for running `CODE_ACTIVATOR` as a plugin
-`CODE_ACTIVATOR__DISABLE_SHORTCUT` | `0` (a.k.a. false)              | whether (or not) the shortcut runner is disabled
-`CODE_ACTIVATOR__ALIAS`            | `lkj`                           | easy-to-type alias for running `CODE_ACTIVATOR`
-`CODE_ACTIVATOR__DISABLE_ALIAS`    | `0` (a.k.a. false)              | whether (or not) the alias runner is disabled
+<sup>\**the configuration file is created the first time Code Activator is sourced*</sup>
 
-### Project Directories
-- `CODE_ACTIVATOR__DIRS` (list) environment variable
 
-A list of fully-qualified paths to project parent directories.
-Provides `($HOME/Code)` as a generic default, but allows for meaningful project grouping:
-```shell
-export CODE_ACTIVATOR__DIRS=(
-	"$HOME/Company/Team1"
-	"$HOME/Company/Team2"
-	"$HOME/Miscellaneous"
-	"$HOME/Personal"
-)
-```
+## Usage
+Code Activator commands can be invoked one of three ways:
+1. directly (`code-activator`; intended for use as an API)
+2. through an alias (`lkj` by default)
+3. through a shortcut (`CTRL+SPACE` by default; creates a zsh-plugin)
 
-### Known Targets
-- `CODE_ACTIVATOR__KNOWN_TARGETS` (list) environment variable
-- expects targets to end in `:` or `/` character
-- *appends environment variable list to the default list*
+With no argument, Code Activator provides a list of all available projects.
+Select one to activate it's environment and jump to the project's root.
 
-A list of default completion targets for setting up or cloning new repositories.
-Includes HTTP and GIT protocol targets for GitHub and BitBucket by default, but you may want to add your user to the list:
-```shell
-export CODE_ACTIVATOR__KNOWN_TARGETS=(
-	'git@github.com:<your-username>/'
-)
-```
+If your first argument to Code Activator is a project name, the specified project will be activated.
+
+You can also `deactivate` an activated project, `clone` an existing project, or create a `new` project (with the appropriate command).
+
+
+## Custom Environment
+Although not exactly a virtual environment, Code Activator creates a `custom-env` for projects where you can set project-specific environment variables or shell functions.
+It also provides a `__RESTORE__` syntax to allow safe manipulation of `PATH` or other variables when activating a project.
+See [the custom-env template](./.env.zsh) for more details.
+
