@@ -5,6 +5,8 @@
 
 Code Activator provides fast project navigation in the terminal through both an API and CLI.
 
+![Visual Demo](./docs/demo.gif "Example usage to jump to code-activator's source!")
+
 ## Contributing
 See our [contributing guide](./docs/CONTRIBUTING.md) and [code of conduct](./docs/CODE_OF_CONDUCT.md).
 
