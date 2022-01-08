@@ -25,6 +25,7 @@ _CA_LIST() {
 	{
 		for base_dir in $CA__DIRS
 		do
+			[ ! -d $base_dir ] && continue
 			{ cd $base_dir; ls -d *; } \
 				| awk '{print "'$(basename $base_dir)/'"$1;}'
 		done
