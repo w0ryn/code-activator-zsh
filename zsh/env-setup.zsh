@@ -1,6 +1,6 @@
 _CA__INTERACTIVE_ENV_SETUP() {
 	local PROJECT_PATH="$1"
-	local NO_ENV="$PROJECT_PATH/$_CA__NO_ENV_SENTINEL"
+	local NO_ENV="$PROJECT_PATH/$CA__NO_ENV"
 
 	printf 'set up a virtual environment now? [(Y)es / (n)o / n(e)ver] '
 	_CA_READ yn
