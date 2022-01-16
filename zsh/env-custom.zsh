@@ -48,9 +48,8 @@ _CA__CUSTOM_ENV_GET_VARIABLE_NAMES() {
 
 _CA__CUSTOM_ENV_GET_FUNCTION_NAMES() {
 	{
-		grep -- '^function ' $_CA_ENV | sed 's/function //'
 		grep -- '[^ #]*()' $_CA_ENV
-	} | sed 's/().*//' | sort -u
+	} | sed 's/().*//; s/^function //' | sort -u
 }
 
 _CA__CUSTOM_ENV_GET_RESTORE_NAMES() {
