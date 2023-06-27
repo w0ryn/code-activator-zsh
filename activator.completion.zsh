@@ -11,7 +11,7 @@ _CA__PROJECT_COMPADD() {
 
 	_describe 'commands' DESCRIPTIONS
 
-	compadd -- $(_CA_LIST)
+	compadd -- $(_CA_GET_LIST)
 }
 
 #####################################################################

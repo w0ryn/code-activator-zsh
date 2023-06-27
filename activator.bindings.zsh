@@ -10,7 +10,7 @@
 	|| return 0
 
 _CA__ZSH_SHORTCUT_PLUGIN() {
-	local OPTIONS=(clone new $(_CA_LIST))
+	local OPTIONS=($(_CA_GET_LIST))
 	[ $_CA_ENV ] && OPTIONS=(deactivate $OPTIONS)
 
 	local SELECTION=$(echo $OPTIONS | _CA_MULTILINE | _CA_FZF 'select a project')

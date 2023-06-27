@@ -22,14 +22,14 @@ _CA_MULTILINE() { sed 's/\s\+/\n/g'; }
 
 _CA_LIST() {
 	local base_dir PROJECTS=()
-	{
-		for base_dir in $CA__DIRS
+	for base_dir in $CA__DIRS
+	do
+		[ ! -d $base_dir ] && continue
+		for project_dir in $(find "$base_dir" -mindepth 1 -maxdepth 1 \( -type d -o -type l \) )
 		do
-			[ ! -d $base_dir ] && continue
-			{ cd $base_dir; ls -d *; } \
-				| awk '{print "'$(basename $base_dir)/'"$1;}'
+			echo $(basename $base_dir)/$(basename $project_dir)
 		done
-	}
+	done
 }
 
 #####################################################################
